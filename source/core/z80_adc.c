@@ -11,7 +11,7 @@ void z80_adc_a(struct z80 *z80, uint8_t n)
 
 void z80_adc_a_R(struct z80 *z80)
 {
-	uint8_t *r = z80_regs_rrr(z80, z80_get_op(z80, 1));
+	uint8_t *r = z80_regs_rrr(z80, z80_get_op(z80, 0));
 	z80_adc_a(z80, *r);
 	INCPC(1);
 }
