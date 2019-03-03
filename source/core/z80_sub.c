@@ -6,6 +6,7 @@ void z80_sub_(struct z80 *z80, uint8_t *src)
 
 	z80_set_flags_default(z80, res, *z80->regs.a, ~((uint16_t)*src) + 1, 0, FLAG_S | FLAG_Z | FLAG_X | FLAG_H | FLAG_Y | FLAG_PV | FLAG_C);
 	z80_set_flag(z80, FLAG_N, 1);
+	*z80->regs.a = res;
 }
 
 void z80_sub_R(struct z80 *z80)
