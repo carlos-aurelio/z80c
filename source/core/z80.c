@@ -6,28 +6,28 @@
 void z80_init(struct z80 *z80, uint8_t *mem, uint8_t *io)
 {
 	memset(z80, 0, sizeof(*z80));
-	z80->regs.a = (uint8_t *)&z80->regs.af;
-	z80->regs.f = z80->regs.a + 1;
-	z80->regs.b = (uint8_t *)&z80->regs.bc;
-	z80->regs.c = z80->regs.b + 1;
-	z80->regs.d = (uint8_t *)&z80->regs.de;
-	z80->regs.e = z80->regs.d + 1;
-	z80->regs.h = (uint8_t *)&z80->regs.hl;
-	z80->regs.l = z80->regs.h + 1;
+	z80->regs.f = (uint8_t *)&z80->regs.af;
+	z80->regs.a = z80->regs.f + 1;
+	z80->regs.c = (uint8_t *)&z80->regs.bc;
+	z80->regs.b = z80->regs.c + 1;
+	z80->regs.e = (uint8_t *)&z80->regs.de;
+	z80->regs.d = z80->regs.e + 1;
+	z80->regs.l = (uint8_t *)&z80->regs.hl;
+	z80->regs.h = z80->regs.l + 1;
 
-	z80->regs_alt.a = (uint8_t *)&z80->regs_alt.af;
-	z80->regs_alt.f = z80->regs_alt.a + 1;
-	z80->regs_alt.b = (uint8_t *)&z80->regs_alt.bc;
-	z80->regs_alt.c = z80->regs_alt.b + 1;
-	z80->regs_alt.d = (uint8_t *)&z80->regs_alt.de;
-	z80->regs_alt.e = z80->regs_alt.d + 1;
-	z80->regs_alt.h = (uint8_t *)&z80->regs_alt.hl;
-	z80->regs_alt.l = z80->regs_alt.h + 1;
+	z80->regs_alt.f = (uint8_t *)&z80->regs_alt.af;
+	z80->regs_alt.a = z80->regs_alt.f + 1;
+	z80->regs_alt.c = (uint8_t *)&z80->regs_alt.bc;
+	z80->regs_alt.b = z80->regs_alt.c + 1;
+	z80->regs_alt.e = (uint8_t *)&z80->regs_alt.de;
+	z80->regs_alt.d = z80->regs_alt.e + 1;
+	z80->regs_alt.l = (uint8_t *)&z80->regs_alt.hl;
+	z80->regs_alt.h = z80->regs_alt.l + 1;
 
-	z80->ixh = (uint8_t *)&z80->ix;
-	z80->ixl = z80->ixh + 1;
-	z80->iyh = (uint8_t *)&z80->iy;
-	z80->iyl = z80->iyh + 1;
+	z80->ixl = (uint8_t *)&z80->ix;
+	z80->ixh = z80->ixl + 1;
+	z80->iyl = (uint8_t *)&z80->iy;
+	z80->iyh = z80->iyl + 1;
 	z80->io = io;
 	z80->mem = mem;
 	z_init_opcode_table(z80);
