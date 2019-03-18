@@ -73,21 +73,82 @@ void run(struct z80 *z80)
 	}
 }
 
+int hex2nibble(int c)
+{
+	if (c >= '0' && c <= '9')
+		return c - '0';
+	else if (c >= 'A' && c <= 'F')
+		return c - 'A' + 0xA;
+	else if (c >= 'a' && c <= 'f')
+		return c - 'a' + 0xa;
+	else
+		return -1;
+}
+
+void readfile(FILE *f, uint8_t *mem, size_t len, int is_hex)
+{
+	int b, c, n;
+	int msbready = 0;
+	int byteready = 0;
+	size_t pos = 0;
+	while (!feof(f)) {
+		c = fgetc(f);
+		if (b < 0)
+			return;
+		if (is_hex) {
+			n = hex2nibble(c);
+			/* ignore non-hexadecimal characters */
+			if (n >= 0) {
+				if (!msbready) {
+					b = n << 4;
+					msbready = 1;
+				} else {
+					b |= n;
+					msbready = 0;
+					byteready = 1;
+				}
+			}
+		} else {
+			b = c;
+			byteready = 1;
+		}
+		if (byteready) {
+			if (pos >= len) {
+				printf("Input file too big, discarding exceeding data.\n");
+				return;
+			}
+			mem[pos++] = (uint8_t)b;
+			byteready = 0;
+		}
+	}
+}
+
 void printhelp(char *argv0)
 {
-	printf("usage:  %s <binary file>\n", argv0);
+	printf("Usage: %s [-h] <input file>\n\n", argv0);
+	printf("    -h    Read input file as hexadecimal string.\n");
+	printf("          Default is binary.");
 }
 
 int main(int argc, char *argv[])
 {
-	if (argc != 2) {
+	int is_hex;
+	if (argc == 2) {
+		is_hex = 0;
+	} else if (argc == 3) {
+		if (strcmp(argv[1], "-h")) {
+			printhelp(argv[0]);
+			return 1;
+		}
+		is_hex = 1;
+	} else {
 		printhelp(argv[0]);
 		return 1;
 	}
 
-	FILE *f = fopen(argv[1], "rb");
+	FILE *f = fopen(argv[argc - 1], "rb");
 	if (!f) {
-		printf("file not found: %s\n", argv[1]);
+		printf("file not found: %s\n", argv[argc - 1]);
 		return 1;
 	}
 
@@ -95,18 +156,7 @@ int main(int argc, char *argv[])
 	uint8_t mem[65536] = { 0 };
 	uint8_t io[256] = { 0 };
 
-
-	fseek(f, 0, SEEK_END);
-	size_t sz = (size_t)ftell(f);
-	if (sz > sizeof(mem)) {
-		printf("program too big: %zu bytes\n", sz);
-		return 1;
-	}
-	fseek(f, 0, SEEK_SET);
-	if (fread(mem, 1, sz, f) != sz) {
-		printf("failed to read from file\n");
-		return 1;
-	}
+	readfile(f, mem, sizeof(mem), is_hex);
 
 	z80_init(&z80, mem, io);
 	run(&z80);
