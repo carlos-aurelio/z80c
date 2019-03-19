@@ -6,7 +6,7 @@ SED ?= sed
 SORT ?= sort
 ECHO ?= echo -e
 
-LOGLEVEL ?= 7
+LOGLEVEL ?= 0
 
 CFLAGS += -O0 -g3 -Wall -Wextra -Iinclude -DLOGLEVEL=$(LOGLEVEL)
 
@@ -17,13 +17,15 @@ BUILDDIR = .build
 CORE_SRC = $(wildcard $(SRCDIR)/core/*.c)
 CORE_OBJ = $(patsubst $(SRCDIR)%.c,$(BUILDDIR)/obj/%.o,$(CORE_SRC))
 
-.PHONY: default all core_test core_lib builddir clean header
+.PHONY: default all core_test zdos core_lib builddir clean header
 
-default: core_test
+default: zdos
 
-all: core_test core_lib
+all: core_test zdos core_lib
 
 core_test: $(BUILDDIR)/core_test
+
+zdos: $(BUILDDIR)/zdos
 
 core_lib: $(BUILDDIR)/z80.so
 
@@ -33,7 +35,7 @@ builddir:
 clean:
 	$(RM) -r $(BUILDDIR)
 
-header:
+header: $(CORE_SRC)
 	$(ECHO) "/*** AUTO-GENERATED FILE ***/\n" > $(INSTR_HEADER)
 	$(ECHO) "#ifndef __Z80_INSTRUCTIONS_H__" >> $(INSTR_HEADER)
 	$(ECHO) "#define __Z80_INSTRUCTIONS_H__\n" >> $(INSTR_HEADER)
@@ -45,11 +47,14 @@ header:
 		sort >> $(INSTR_HEADER)
 	$(ECHO) "\n#endif /* __Z80_INSTRUCTIONS_H__ */" >> $(INSTR_HEADER)
 
-$(BUILDDIR)/obj/%.o: $(SRCDIR)/%.c builddir header
+$(BUILDDIR)/obj/%.o: $(SRCDIR)/%.c header | builddir
 	$(CC) -c -o $@ $< $(CFLAGS)
 
 $(BUILDDIR)/z80.so: $(CORE_OBJ)
 	$(CC) -shared -o $@ $^ $(LDFLAGS)
 
 $(BUILDDIR)/core_test: $(BUILDDIR)/obj/core_test.o $(CORE_OBJ)
+	$(CC) -o $@ $^ $(LDFLAGS)
+
+$(BUILDDIR)/zdos: $(BUILDDIR)/obj/zdos.o $(CORE_OBJ)
 	$(CC) -o $@ $^ $(LDFLAGS)
