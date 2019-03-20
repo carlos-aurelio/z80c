@@ -78,7 +78,7 @@ void z80_rst_S(struct z80 *z80)
 	uint8_t op0 = z80_get_op(z80, 0);
 	uint8_t s = (op0 >> 3) & 7;
 	z80->sp -= 2;
-	*((uint16_t *)&z80->mem[z80->sp]) = z80->pc;
+	*((uint16_t *)&z80->mem[z80->sp]) = z80->pc + 1;
 	z80->pc = s;
 }
 
