@@ -14,12 +14,12 @@ void z80_rlrx_(struct z80 *z80, uint8_t *r, uint8_t c, uint8_t rr)
 	uint8_t ocf = 0;
 	
 	if (!c)	/* rl or rr */
-		z80_get_flag(z80, FLAG_C);
+		ocf = z80_get_flag(z80, FLAG_C);
 
 	if (rr) /* rr or rrc */
-		z80_set_flag(z80, FLAG_C, bitval(*r, 7));
-	else	/* rl or rlc */
 		z80_set_flag(z80, FLAG_C, bitval(*r, 0));
+	else	/* rl or rlc */
+		z80_set_flag(z80, FLAG_C, bitval(*r, 7));
 
 	if (c)	/* rl or rr */
 		ocf = z80_get_flag(z80, FLAG_C);
