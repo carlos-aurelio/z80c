@@ -1,6 +1,4 @@
-CC ?= gcc
 MD ?= mkdir -p
-RM ?= rm -f
 GREP ?= grep
 SED ?= sed
 SORT ?= sort
@@ -15,7 +13,7 @@ INSTR_HEADER ?= source/core/z80_instructions.h
 SRCDIR = source
 BUILDDIR = .build
 CORE_SRC = $(wildcard $(SRCDIR)/core/*.c)
-CORE_OBJ = $(patsubst $(SRCDIR)%.c,$(BUILDDIR)/obj/%.o,$(CORE_SRC))
+CORE_OBJ = $(patsubst $(SRCDIR)/%.c,$(BUILDDIR)/obj/%.o,$(CORE_SRC))
 
 .PHONY: default all core_test zdos core_lib builddir clean header
 
@@ -29,13 +27,17 @@ zdos: $(BUILDDIR)/zdos
 
 core_lib: $(BUILDDIR)/z80.so
 
-builddir:
-	$(MD) $(BUILDDIR)/obj/core
+header: $(INSTR_HEADER)
+
+builddir: $(BUILDDIR)/obj/core
 
 clean:
 	$(RM) -r $(BUILDDIR)
 
-header: $(CORE_SRC)
+$(BUILDDIR)/obj/core:
+	$(MD) $@
+
+$(INSTR_HEADER): $(CORE_SRC)
 	$(ECHO) "/*** AUTO-GENERATED FILE ***/\n" > $(INSTR_HEADER)
 	$(ECHO) "#ifndef __Z80_INSTRUCTIONS_H__" >> $(INSTR_HEADER)
 	$(ECHO) "#define __Z80_INSTRUCTIONS_H__\n" >> $(INSTR_HEADER)
@@ -47,7 +49,7 @@ header: $(CORE_SRC)
 		sort >> $(INSTR_HEADER)
 	$(ECHO) "\n#endif /* __Z80_INSTRUCTIONS_H__ */" >> $(INSTR_HEADER)
 
-$(BUILDDIR)/obj/%.o: $(SRCDIR)/%.c header | builddir
+$(BUILDDIR)/obj/%.o: $(SRCDIR)/%.c | header builddir
 	$(CC) -c -o $@ $< $(CFLAGS)
 
 $(BUILDDIR)/z80.so: $(CORE_OBJ)
