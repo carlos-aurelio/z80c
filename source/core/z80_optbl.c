@@ -381,7 +381,7 @@ static void z_init_opcode_pop_push(void)
 		OPFUNC(0xC5 | (pp << 4), base, z80_push_P);
 	}
 	OPFUNC_i(0xE1, z80_pop_I);		/* pop I */
-	OPFUNC_i(0xE5, z80_pop_I);		/* push I */
+	OPFUNC_i(0xE5, z80_push_I);		/* push I */
 }
 
 static void z_init_opcode_res(void)
