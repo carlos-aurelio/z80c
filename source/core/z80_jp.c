@@ -26,7 +26,7 @@ void z80_jp_C_A(struct z80 *z80)
 
 void z80_jr_E(struct z80 *z80)
 {
-	z80->pc += (int8_t)z80_get_op(z80, 1);
+	z80->pc += (int8_t)z80_get_op(z80, 1) + 2;
 }
 
 void z80_jr_nz_E(struct z80 *z80)
