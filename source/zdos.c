@@ -81,10 +81,25 @@ void zdos_call(struct z80 *z80)
 		PRMSG("Invalid ZDOS function: 0x%02X\n", *z80->regs.c);
 }
 
+void zdos_putc(struct z80 *z80)
+{
+	if (*z80->regs.a == '\r')
+		putchar('\n');
+	else
+		putchar(*z80->regs.a);
+	fflush(stdout);
+}
+
 void step(struct z80 *z80)
 {
-	if (z80->pc == 5)
+	if (z80->pc == 0x05)
 		zdos_call(z80);
+	if (z80->pc == 0x10)
+		zdos_putc(z80);
+	if (z80->mem[z80->pc] == 0x76) {
+		PRMSG("CPU halt.");
+		exit(1);
+	}
 	z80_step(z80);
 }
 
@@ -102,6 +117,8 @@ void init(struct z80 *z80, uint8_t *mem, uint8_t *io, uint16_t run_addr)
 	mem[4] = 0x00;
 	/* ret */
 	mem[5] = 0xC9;
+	/* ret */
+	mem[16] = 0xC9;
 
 	/* setup entry point */
 	z80->pc = run_addr;
