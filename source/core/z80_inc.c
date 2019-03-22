@@ -4,7 +4,7 @@ void z80_inc(struct z80 *z80, uint8_t *reg)
 {
 	uint8_t dst = *reg;
 	uint8_t res = dst + 1;
-	z80_set_flags_default(z80, *reg, dst, -1, 0, FLAG_S | FLAG_Z | FLAG_X | FLAG_H | FLAG_Y | FLAG_PV);
+	z80_set_flags_default(z80, *reg, dst, 1, 0, FLAG_S | FLAG_Z | FLAG_X | FLAG_H | FLAG_Y | FLAG_PV);
 	z80_set_flag(z80, FLAG_N, 0);
 	*reg = res;
 }
