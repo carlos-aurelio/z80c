@@ -102,7 +102,7 @@ void z80_ld_I_D_R(struct z80 *z80)
 void z80_ld_I_D_N(struct z80 *z80)
 {
 	uint8_t *id = z80_get_I_D(z80);
-	*id = z80_get_op(z80, 3);
+	*id = z80_get_op(z80, 2);
 	INCPC(4);
 }
 
