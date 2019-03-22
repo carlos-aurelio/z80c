@@ -70,42 +70,52 @@ void z_nothing_ixiybits(struct z80 *z80)
 void z_base(struct z80 *z80)
 {
 	uint8_t op = z80_get_op(z80, 0);
+	if (op != 0xed && op != 0xcb && op != 0xdd && op != 0xfd)
+		DEBUG("@%04x: %02x %s", z80->pc, op, optbl_base[op].name);
 	optbl_base[op].func(z80);
 }
 
 void z_extended(struct z80 *z80)
 {
 	uint8_t op1 = z80_get_op(z80, 1);
+	DEBUG("@%04x: ed %02x %s", z80->pc, op1, optbl_extended[op1].name);
 	optbl_extended[op1].func(z80);
 }
 
 void z_bits(struct z80 *z80)
 {
 	uint8_t op1 = z80_get_op(z80, 1);
+	DEBUG("@%04x: cb %02x %s", z80->pc, op1, optbl_bits[op1].name);
 	optbl_bits[op1].func(z80);
 }
 
 void z_ix(struct z80 *z80)
 {
 	uint8_t op1 = z80_get_op(z80, 1);
+	if (op1 != 0xcb)
+		DEBUG("@%04x: dd %02x %s", z80->pc, op1, optbl_ix[op1].name);
 	optbl_ix[op1].func(z80);
 }
 
 void z_ix_bits(struct z80 *z80)
 {
 	uint8_t op3 = z80_get_op(z80, 3);
+	DEBUG("@%04x: dd cb ** %02x %s", z80->pc, op3, optbl_ixbits[op3].name);
 	optbl_ixbits[op3].func(z80);
 }
 
 void z_iy(struct z80 *z80)
 {
 	uint8_t op1 = z80_get_op(z80, 1);
+	if (op1 != 0xcb)
+		DEBUG("@%04x: fd %02x %s", z80->pc, op1, optbl_iy[op1].name);
 	optbl_iy[op1].func(z80);
 }
 
 void z_iy_bits(struct z80 *z80)
 {
 	uint8_t op3 = z80_get_op(z80, 3);
+	DEBUG("@%04x: fd cb ** %02x %s", z80->pc, op3, optbl_iybits[op3].name);
 	optbl_iybits[op3].func(z80);
 }
 

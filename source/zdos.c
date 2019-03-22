@@ -4,6 +4,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <z80.h>
+#include "core/trace.h"
 #include "core/util.h"
 
 #define MEM_LEN 65536
@@ -26,11 +27,22 @@ struct func_tuple {
 };
 
 
+void pr_stats(struct z80 *z80)
+{
+	DEBUG("call/ret count:");
+	DEBUG("         call: %llu", z80->counters.call);
+	DEBUG("          rst: %llu", z80->counters.rst);
+	DEBUG("   call + rst: %llu", z80->counters.call + z80->counters.rst);
+	DEBUG("          ret: %llu", z80->counters.ret);
+	DEBUG("         push: %llu", z80->counters.push);
+	DEBUG("          pop: %llu", z80->counters.pop);
+}
+
 /* _TERM0 */
 void zdos_00h(struct z80 *z80)
 {
-	(void)z80;
 	PRMSG("Program exited.");
+	pr_stats(z80);
 	exit(0);
 }
 
@@ -98,6 +110,7 @@ void step(struct z80 *z80)
 		zdos_putc(z80);
 	if (z80->mem[z80->pc] == 0x76) {
 		PRMSG("CPU halt.");
+		pr_stats(z80);
 		exit(1);
 	}
 	z80_step(z80);

@@ -5,6 +5,9 @@ void z80_ret(struct z80 *z80)
 	
 	z80->pc = *(uint16_t *)&z80->mem[z80->sp];
 	z80->sp += 2;
+	if (z80->counters.ret == UINT64_MAX)
+		WARN("counters.ret overflow");
+	z80->counters.ret++;
 }
 
 void z80_ret_C(struct z80 *z80)

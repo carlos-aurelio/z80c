@@ -4,6 +4,9 @@ void z80_pop(struct z80 *z80, uint16_t *reg)
 {
 	*reg = *((uint16_t *)&z80->mem[z80->sp]);
 	z80->sp += 2;
+	if (z80->counters.pop == UINT64_MAX)
+		WARN("counters.pop overflow");
+	z80->counters.pop++;
 }
 
 void z80_pop_P(struct z80 *z80)

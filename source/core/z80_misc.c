@@ -80,6 +80,9 @@ void z80_rst_S(struct z80 *z80)
 	z80->sp -= 2;
 	*((uint16_t *)&z80->mem[z80->sp]) = z80->pc + 1;
 	z80->pc = s;
+	if (z80->counters.rst == UINT64_MAX)
+		WARN("counters.rst overflow");
+	z80->counters.rst++;
 }
 
 void z80_scf(struct z80 *z80)

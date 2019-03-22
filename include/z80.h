@@ -3,6 +3,14 @@
 
 #include <stdint.h>
 
+struct counters {
+	uint64_t call;
+	uint64_t ret;
+	uint64_t rst;
+	uint64_t push;
+	uint64_t pop;
+};
+
 struct regs {
 	uint16_t af;
 	uint16_t bc;
@@ -35,6 +43,9 @@ struct z80 {
 	/* external i/o and memory */
 	uint8_t *io;
 	uint8_t *mem;
+
+	/* debugging */
+	struct counters counters;
 };
 
 typedef void (*opcode_func)(struct z80 *);

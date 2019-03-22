@@ -35,8 +35,7 @@ void z80_init(struct z80 *z80, uint8_t *mem, uint8_t *io)
 
 void z80_step(struct z80 *z80)
 {
-	uint8_t op = z80->mem[z80->pc];
-	z80->opcodes[op].func(z80);
+	z_base(z80);
 }
 
 void z80_set_flag(struct  z80 *z80, uint8_t flag, uint32_t set_reset)

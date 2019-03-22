@@ -42,5 +42,6 @@ uint8_t *z80_get_I_D(struct z80 *z80);
 void z80_adx_hl_Q(struct z80 *z80, uint8_t flags);
 
 void z_init_opcode_table(struct z80 *z80);
+void z_base(struct z80 *z80);
 
 #endif /* __Z80_INTERNAL_H__ */
