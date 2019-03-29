@@ -104,8 +104,10 @@ void zdos_putc(struct z80 *z80)
 
 void step(struct z80 *z80)
 {
+	/*
 	if (z80->pc == 0x05)
 		zdos_call(z80);
+	*/
 	if (z80->pc == 0x10)
 		zdos_putc(z80);
 	if (z80->mem[z80->pc] == 0x76) {
@@ -113,6 +115,8 @@ void step(struct z80 *z80)
 		pr_stats(z80);
 		exit(1);
 	}
+	DEBUG("sp: %04X", z80->sp);
+	DEBUG("op: %02X %02X %02X %02X", z80->mem[z80->pc], z80->mem[z80->pc + 1], z80->mem[z80->pc + 2], z80->mem[z80->pc + 3]);
 	z80_step(z80);
 }
 
@@ -122,14 +126,14 @@ void init(struct z80 *z80, uint8_t *mem, uint8_t *io, uint16_t run_addr)
 
 	/* setup zdos call return */
 	/* ld c,0 (_TERM0) */
-	mem[0] = 0x0E;
+	/* mem[0] = 0x0E; */
 	mem[1] = 0x00;
 	/* nop */
 	mem[2] = 0x00;
 	mem[3] = 0x00;
 	mem[4] = 0x00;
 	/* ret */
-	mem[5] = 0xC9;
+	/* mem[5] = 0xC9; */
 	/* ret */
 	mem[16] = 0xC9;
 
