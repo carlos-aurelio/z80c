@@ -4,8 +4,6 @@ SED ?= sed
 SORT ?= sort
 ECHO ?= echo -e
 
-LOGLEVEL ?= 0
-
 CFLAGS += -O0 -g3 -Wall -Wextra -Iinclude -DLOGLEVEL=$(LOGLEVEL)
 
 INSTR_HEADER ?= source/core/z80_instructions.h
