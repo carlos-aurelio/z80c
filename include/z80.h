@@ -3,6 +3,9 @@
 
 #include <stdint.h>
 
+typedef uint8_t (*cb_in)(uint8_t port);
+typedef void (*cb_out)(uint8_t port, uint8_t val);
+
 struct regs {
 	uint16_t af;
 	uint16_t bc;
@@ -32,9 +35,12 @@ struct z80 {
 	/* reference registers */
 	uint8_t *ixh, *ixl, *iyh, *iyl;
 
-	/* external i/o and memory */
-	uint8_t *io;
+	/* external memory */
 	uint8_t *mem;
+
+	/* i/o callbacks */
+	cb_in cb_in;
+	cb_out cb_out;
 };
 
 typedef void (*opcode_func)(struct z80 *);
@@ -44,8 +50,8 @@ struct z80_opcode {
 	const char *name;
 };
 
-/* initializes the core emulator with given memory and i/o buffers */
-void z80_init(struct z80 *z80, uint8_t *mem, uint8_t *io);
+/* initializes the core emulator with given memory and i/o callbacks */
+void z80_init(struct z80 *z80, uint8_t *mem, cb_in cb_in, cb_out cb_out);
 
 /* executes a single instruction and returns */
 void z80_step(struct z80 *z80);

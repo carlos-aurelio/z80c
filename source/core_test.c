@@ -130,6 +130,18 @@ void printhelp(char *argv0)
 	printf("          Default is binary.");
 }
 
+uint8_t _in(uint8_t port)
+{
+	uint8_t val = 0;
+	printf(" >> IN, port = %hhu, val = %hhu\n", port ,val);
+	return val;
+}
+
+void _out(uint8_t port, uint8_t val)
+{
+	printf(" << OUT, port %hhu = %hhu\n", port, val);
+}
+
 int main(int argc, char *argv[])
 {
 	int is_hex;
@@ -154,11 +166,10 @@ int main(int argc, char *argv[])
 
 	struct z80 z80;
 	uint8_t mem[65536] = { 0 };
-	uint8_t io[256] = { 0 };
 
 	readfile(f, mem, sizeof(mem), is_hex);
 
-	z80_init(&z80, mem, io);
+	z80_init(&z80, mem, _in, _out);
 	run(&z80);
 	return 0;
 }

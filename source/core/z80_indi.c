@@ -2,7 +2,7 @@
 
 void z80_inx(struct z80 *z80, int8_t n)
 {
-	uint16_t tmp = z80->io[*z80->regs.c];
+	uint16_t tmp = z80->cb_in(*z80->regs.c);
 	z80->mem[z80->regs.hl] = tmp;
 	z80->regs.hl += n;
 	(*z80->regs.b)--;

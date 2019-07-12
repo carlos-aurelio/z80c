@@ -4,13 +4,13 @@
 
 void z80_in_a_N(struct z80 *z80)
 {
-	*z80->regs.a = z80->io[z80_get_op(z80, 1)];
+	*z80->regs.a = z80->cb_in(z80_get_op(z80, 1));
 	INCPC(2);
 }
 
 void z80_in__c(struct z80 *z80, uint8_t *r)
 {
-	uint8_t c = z80->io[*z80->regs.c];
+	uint8_t c = z80->cb_in(*z80->regs.c);
 	uint8_t res = c;
 	z80_set_flags_default(z80, res, res, c, 0, FLAG_S | FLAG_Z | FLAG_X | FLAG_Y | FLAG_PV | FLAG_PV_PARITY);
 	z80_set_flag(z80, FLAG_H | FLAG_N, 0);

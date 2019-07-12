@@ -2,27 +2,27 @@
 
 void z80_out_N_a(struct z80 *z80)
 {
-	z80->io[z80_get_op(z80, 1)] = *z80->regs.a;
+	z80->cb_out(z80_get_op(z80, 1), *z80->regs.a);
 	INCPC(2);
 }
 
 void z80_out_c_R(struct z80 *z80)
 {
 	uint8_t *r = z80_regs_rrr(z80, z80_get_op(z80, 0) >> 3);
-	z80->io[*z80->regs.c] = *r;
+	z80->cb_out(*z80->regs.c, *r);
 	INCPC(2);
 }
 
 void z80_out_c_0(struct z80 *z80)
 {
-	z80->io[*z80->regs.c] = 0;
+	z80->cb_out(*z80->regs.c, 0);
 	INCPC(2);
 }
 
 void z80_outx(struct z80 *z80, int8_t n)
 {
 	uint16_t tmp = z80->mem[z80->regs.hl];
-	z80->io[*z80->regs.c] = tmp;
+	z80->cb_out(*z80->regs.c, tmp);
 	z80->regs.hl += n;
 	(*z80->regs.b)--;
 	uint16_t tmp2 = tmp + *z80->regs.l;

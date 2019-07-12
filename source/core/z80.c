@@ -3,7 +3,7 @@
 
 #include "z80_instructions.h"
 
-void z80_init(struct z80 *z80, uint8_t *mem, uint8_t *io)
+void z80_init(struct z80 *z80, uint8_t *mem, cb_in cb_in, cb_out cb_out)
 {
 	memset(z80, 0, sizeof(*z80));
 	z80->regs.f = (uint8_t *)&z80->regs.af;
@@ -28,8 +28,11 @@ void z80_init(struct z80 *z80, uint8_t *mem, uint8_t *io)
 	z80->ixh = z80->ixl + 1;
 	z80->iyl = (uint8_t *)&z80->iy;
 	z80->iyh = z80->iyl + 1;
-	z80->io = io;
 	z80->mem = mem;
+
+	z80->cb_in = cb_in;
+	z80->cb_out = cb_out;
+
 	z_init_opcode_table(z80);
 }
 
