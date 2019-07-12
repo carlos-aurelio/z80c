@@ -4,7 +4,7 @@ RM ?= rm -f
 GREP ?= grep
 SED ?= sed
 SORT ?= sort
-ECHO ?= echo -e
+ECHO ?= echo
 
 LOGLEVEL ?= 7
 
